@@ -18,7 +18,7 @@
       <messageEventDefinition messageRef="msgPublish"></messageEventDefinition>
     </intermediateCatchEvent>
     <sequenceFlow id="flow7" sourceRef="eventgateway2" targetRef="messageintermediatecatchevent2"></sequenceFlow>
-    <serviceTask id="servicetask3" name="Published"></serviceTask>
+    <serviceTask id="servicetask3" name="Published" activiti:class="com.oriente.cashalo.backend.volt.delegates.BorrowOrderProcess.PublishedDelegate"></serviceTask>
     <sequenceFlow id="flow8" sourceRef="messageintermediatecatchevent2" targetRef="servicetask3"></sequenceFlow>
     <sequenceFlow id="flow9" sourceRef="servicetask15" targetRef="eventgateway3"></sequenceFlow>
     <eventBasedGateway id="eventgateway3" name="Exclusive Gateway"></eventBasedGateway>
@@ -26,7 +26,7 @@
       <messageEventDefinition messageRef="msgInvest"></messageEventDefinition>
     </intermediateCatchEvent>
     <sequenceFlow id="flow10" sourceRef="eventgateway3" targetRef="messageintermediatecatchevent3"></sequenceFlow>
-    <serviceTask id="servicetask4" name="Invested"></serviceTask>
+    <serviceTask id="servicetask4" name="Invested" activiti:class="com.oriente.cashalo.backend.volt.delegates.BorrowOrderProcess.InvestedDelegate"></serviceTask>
     <sequenceFlow id="flow11" sourceRef="messageintermediatecatchevent3" targetRef="servicetask4"></sequenceFlow>
     <endEvent id="endevent1" name="End"></endEvent>
     <startEvent id="messagestartevent1" name="Message start">
@@ -36,14 +36,14 @@
       <messageEventDefinition messageRef="msgApprove"></messageEventDefinition>
     </intermediateCatchEvent>
     <sequenceFlow id="flow6" sourceRef="messageintermediatecatchevent1" targetRef="servicetask2"></sequenceFlow>
-    <serviceTask id="servicetask2" name="Approved"></serviceTask>
+    <serviceTask id="servicetask2" name="Approved" activiti:class="com.oriente.cashalo.backend.volt.delegates.BorrowOrderProcess.ApprovedDelegate"></serviceTask>
     <sequenceFlow id="flow5" sourceRef="servicetask2" targetRef="eventgateway2"></sequenceFlow>
     <intermediateCatchEvent id="messageintermediatecatchevent11" name="MessageCatchEvent">
       <messageEventDefinition messageRef="msgCancel"></messageEventDefinition>
     </intermediateCatchEvent>
     <sequenceFlow id="flow47" sourceRef="eventgateway1" targetRef="messageintermediatecatchevent11"></sequenceFlow>
     <sequenceFlow id="flow48" sourceRef="eventgateway2" targetRef="messageintermediatecatchevent11"></sequenceFlow>
-    <serviceTask id="servicetask11" name="Cancelled"></serviceTask>
+    <serviceTask id="servicetask11" name="Cancelled" activiti:class="com.oriente.cashalo.backend.volt.delegates.BorrowOrderProcess.CancelledDelegate"></serviceTask>
     <sequenceFlow id="flow50" sourceRef="messageintermediatecatchevent11" targetRef="servicetask11"></sequenceFlow>
     <sequenceFlow id="flow51" sourceRef="servicetask11" targetRef="eventgateway6"></sequenceFlow>
     <eventBasedGateway id="eventgateway6" name="Exclusive Gateway"></eventBasedGateway>
@@ -51,7 +51,7 @@
       <messageEventDefinition messageRef="msgClose"></messageEventDefinition>
     </intermediateCatchEvent>
     <sequenceFlow id="flow52" sourceRef="eventgateway6" targetRef="messageintermediatecatchevent12"></sequenceFlow>
-    <serviceTask id="servicetask12" name="Closed with Cancellation"></serviceTask>
+    <serviceTask id="servicetask12" name="Closed with Cancellation" activiti:class="com.oriente.cashalo.backend.volt.delegates.BorrowOrderProcess.ClosedDelegate"></serviceTask>
     <sequenceFlow id="flow53" sourceRef="messageintermediatecatchevent12" targetRef="servicetask12"></sequenceFlow>
     <endEvent id="endevent3" name="End"></endEvent>
     <sequenceFlow id="flow54" sourceRef="servicetask12" targetRef="endevent3"></sequenceFlow>
@@ -70,7 +70,7 @@
       <messageEventDefinition messageRef="msgMatch"></messageEventDefinition>
     </intermediateCatchEvent>
     <sequenceFlow id="flow64" sourceRef="eventgateway7" targetRef="messageintermediatecatchevent15"></sequenceFlow>
-    <serviceTask id="servicetask15" name="Matched"></serviceTask>
+    <serviceTask id="servicetask15" name="Matched" activiti:class="com.oriente.cashalo.backend.volt.delegates.BorrowOrderProcess.MatchedDelegate"></serviceTask>
     <sequenceFlow id="flow67" sourceRef="messageintermediatecatchevent15" targetRef="servicetask15"></sequenceFlow>
     <intermediateCatchEvent id="messageintermediatecatchevent16" name="MessageCatchEvent">
       <messageEventDefinition messageRef="msgUnpublish"></messageEventDefinition>
