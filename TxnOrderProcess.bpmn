@@ -1,39 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
-  <process id="myProcess" name="My process" isExecutable="true">
+  <message id="msgNewTxnOrder" name="NewTxnOrder"></message>
+  <message id="msgSucceeded" name="Succeeded"></message>
+  <message id="msgFailed" name="Failed"></message>
+  <message id="msgCancelled" name="Cancelled"></message>
+  <process id="TxnOrderProcess" name="Txn Order Process" isExecutable="true">
     <startEvent id="messagestartevent1" name="Message start">
-      <messageEventDefinition></messageEventDefinition>
+      <messageEventDefinition messageRef="msgNewTxnOrder"></messageEventDefinition>
     </startEvent>
-    <serviceTask id="servicetask1" name="Created"></serviceTask>
+    <serviceTask id="servicetask1" name="Created" activiti:class="foo"></serviceTask>
     <sequenceFlow id="flow1" name="txnId/orderId" sourceRef="messagestartevent1" targetRef="servicetask1"></sequenceFlow>
     <sequenceFlow id="flow2" sourceRef="servicetask1" targetRef="eventgateway1"></sequenceFlow>
     <eventBasedGateway id="eventgateway1" name="Exclusive Gateway"></eventBasedGateway>
     <intermediateCatchEvent id="messageintermediatecatchevent1" name="MessageCatchEvent">
-      <messageEventDefinition></messageEventDefinition>
+      <messageEventDefinition messageRef="msgSucceeded"></messageEventDefinition>
     </intermediateCatchEvent>
     <sequenceFlow id="flow3" sourceRef="eventgateway1" targetRef="messageintermediatecatchevent1"></sequenceFlow>
     <intermediateCatchEvent id="messageintermediatecatchevent2" name="MessageCatchEvent">
-      <messageEventDefinition></messageEventDefinition>
+      <messageEventDefinition messageRef="msgFailed"></messageEventDefinition>
     </intermediateCatchEvent>
     <sequenceFlow id="flow4" sourceRef="eventgateway1" targetRef="messageintermediatecatchevent2"></sequenceFlow>
     <intermediateCatchEvent id="timerintermediatecatchevent1" name="TimerCatchEvent">
-      <timerEventDefinition></timerEventDefinition>
+      <timerEventDefinition>
+        <timeDuration>1000</timeDuration>
+      </timerEventDefinition>
     </intermediateCatchEvent>
     <sequenceFlow id="flow5" sourceRef="eventgateway1" targetRef="timerintermediatecatchevent1"></sequenceFlow>
-    <serviceTask id="servicetask2" name="Succeeded"></serviceTask>
+    <serviceTask id="servicetask2" name="Succeeded" activiti:class="foo"></serviceTask>
     <sequenceFlow id="flow6" sourceRef="messageintermediatecatchevent1" targetRef="servicetask2"></sequenceFlow>
-    <serviceTask id="servicetask3" name="Query Txn Status"></serviceTask>
+    <serviceTask id="servicetask3" name="Query Txn Status" activiti:class="foo"></serviceTask>
     <sequenceFlow id="flow7" sourceRef="timerintermediatecatchevent1" targetRef="servicetask3"></sequenceFlow>
     <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow8" sourceRef="servicetask3" targetRef="exclusivegateway1"></sequenceFlow>
     <sequenceFlow id="flow9" sourceRef="exclusivegateway1" targetRef="servicetask2"></sequenceFlow>
-    <serviceTask id="servicetask4" name="Failed"></serviceTask>
+    <serviceTask id="servicetask4" name="Failed" activiti:class="foo"></serviceTask>
     <sequenceFlow id="flow10" sourceRef="messageintermediatecatchevent2" targetRef="servicetask4"></sequenceFlow>
     <intermediateCatchEvent id="messageintermediatecatchevent3" name="MessageCatchEvent">
-      <messageEventDefinition></messageEventDefinition>
+      <messageEventDefinition messageRef="msgCancelled"></messageEventDefinition>
     </intermediateCatchEvent>
     <sequenceFlow id="flow11" sourceRef="eventgateway1" targetRef="messageintermediatecatchevent3"></sequenceFlow>
-    <serviceTask id="servicetask5" name="Cancelled"></serviceTask>
+    <serviceTask id="servicetask5" name="Cancelled" activiti:class="foo"></serviceTask>
     <sequenceFlow id="flow12" sourceRef="messageintermediatecatchevent3" targetRef="servicetask5"></sequenceFlow>
     <sequenceFlow id="flow13" sourceRef="exclusivegateway1" targetRef="servicetask4"></sequenceFlow>
     <sequenceFlow id="flow14" sourceRef="exclusivegateway1" targetRef="servicetask5"></sequenceFlow>
@@ -52,8 +58,8 @@
     </textAnnotation>
     <association id="association1" sourceRef="textannotation1" targetRef="servicetask2"></association>
   </process>
-  <bpmndi:BPMNDiagram id="BPMNDiagram_myProcess">
-    <bpmndi:BPMNPlane bpmnElement="myProcess" id="BPMNPlane_myProcess">
+  <bpmndi:BPMNDiagram id="BPMNDiagram_TxnOrderProcess">
+    <bpmndi:BPMNPlane bpmnElement="TxnOrderProcess" id="BPMNPlane_TxnOrderProcess">
       <bpmndi:BPMNShape bpmnElement="messagestartevent1" id="BPMNShape_messagestartevent1">
         <omgdc:Bounds height="35.0" width="35.0" x="70.0" y="221.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>

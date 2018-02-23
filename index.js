@@ -1,9 +1,5 @@
-const APP_SERVER = 'http://localhost';
-const APP_PORT = 8182;
-const ACTIVITI_IMAGE_SERVER = 'http://localhost:9000';
-
-
-
+// load config
+require('dotenv').config();
 
 var http = require('http'),
     httpProxy = require('http-proxy');
@@ -18,15 +14,18 @@ function outputPlantumlImage(req, res, next) {
   {
     const name = req.url.substring(1,req.url.length-4);
     res.setHeader('Content-Type', 'image/png');
-    req.url = `/activiti_image_server/proxy?name=${name}&src=${APP_SERVER}:${APP_PORT}/${name}`;
-    proxy.web(req, res, { target: ACTIVITI_IMAGE_SERVER });
+    req.url = `/activiti_image_server/proxy?name=${name}&src=${process.env.APP_SERVER}:${process.env.APP_PORT}/${name}`;
+    proxy.on('error', function(e) {
+      console.log(e);
+    });
+    proxy.web(req, res, { target: process.env.ACTIVITI_IMAGE_SERVER });
   }else{
     next();
   }
 }
 
 var params = {
-    port: APP_PORT, // Set the server port. Defaults to 8080. 
+    port: process.env.APP_PORT, // Set the server port. Defaults to 8080. 
     host: "0.0.0.0", // Set the address to bind to. Defaults to 0.0.0.0 or process.env.IP. 
     open: true, // When false, it won't load your browser by default. 
     ignore: 'scss,my/templates', // comma-separated string for paths to ignore 
@@ -37,6 +36,6 @@ var params = {
     middleware: [outputPlantumlImage] // Takes an array of Connect-compatible middleware that are injected into the server middleware stack 
 };
 
-console.info(`http://0.0.0.0:${APP_PORT}/index.html`);
+console.info(`http://0.0.0.0:${process.env.APP_PORT}/index.html`);
 
 liveServer.start(params);
