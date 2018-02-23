@@ -55,7 +55,7 @@
     <sequenceFlow id="flow53" sourceRef="messageintermediatecatchevent12" targetRef="servicetask12"></sequenceFlow>
     <endEvent id="endevent3" name="End"></endEvent>
     <sequenceFlow id="flow54" sourceRef="servicetask12" targetRef="endevent3"></sequenceFlow>
-    <serviceTask id="servicetask13" name="Submitted"></serviceTask>
+    <serviceTask id="servicetask13" name="Submitted" activiti:class="com.oriente.cashalo.backend.volt.delegates.BorrowOrderProcess.SubmittedDelegate"></serviceTask>
     <sequenceFlow id="flow56" sourceRef="messagestartevent1" targetRef="servicetask13"></sequenceFlow>
     <sequenceFlow id="flow57" sourceRef="servicetask13" targetRef="eventgateway1"></sequenceFlow>
     <intermediateCatchEvent id="messageintermediatecatchevent14" name="MessageCatchEvent">

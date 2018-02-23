@@ -3,6 +3,7 @@
 	<name>bpmn</name>
 	<comment></comment>
 	<projects>
+		<project>volt</project>
 	</projects>
 	<buildSpec>
 	</buildSpec>
