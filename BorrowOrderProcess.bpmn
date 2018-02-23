@@ -12,7 +12,7 @@
   <message id="msgInvest" name="Invest"></message>
   <process id="BorrowOrderProcess" name="Borrow Order Process" isExecutable="true">
     <eventBasedGateway id="eventgateway1" name="Event Gateway"></eventBasedGateway>
-    <sequenceFlow id="flow4" sourceRef="eventgateway1" targetRef="messageintermediatecatchevent1"></sequenceFlow>
+    <sequenceFlow id="flow4" sourceRef="eventgateway1" targetRef="msgEventApprove"></sequenceFlow>
     <eventBasedGateway id="eventgateway2" name="Parallel Gateway"></eventBasedGateway>
     <intermediateCatchEvent id="messageintermediatecatchevent2" name="MessageCatchEvent">
       <messageEventDefinition messageRef="msgPublish"></messageEventDefinition>
@@ -29,16 +29,16 @@
     <serviceTask id="servicetask4" name="Invested" activiti:class="com.oriente.cashalo.backend.volt.delegates.BorrowOrderProcess.InvestedDelegate"></serviceTask>
     <sequenceFlow id="flow11" sourceRef="messageintermediatecatchevent3" targetRef="servicetask4"></sequenceFlow>
     <endEvent id="endevent1" name="End"></endEvent>
-    <startEvent id="messagestartevent1" name="Message start">
+    <startEvent id="msgStartEvent" name="Message start">
       <messageEventDefinition messageRef="msgNewBorrowOrder"></messageEventDefinition>
     </startEvent>
-    <intermediateCatchEvent id="messageintermediatecatchevent1" name="MessageCatchEvent">
+    <intermediateCatchEvent id="msgEventApprove" name="Approve">
       <messageEventDefinition messageRef="msgApprove"></messageEventDefinition>
     </intermediateCatchEvent>
-    <sequenceFlow id="flow6" sourceRef="messageintermediatecatchevent1" targetRef="servicetask2"></sequenceFlow>
+    <sequenceFlow id="flow6" sourceRef="msgEventApprove" targetRef="servicetask2"></sequenceFlow>
     <serviceTask id="servicetask2" name="Approved" activiti:class="com.oriente.cashalo.backend.volt.delegates.BorrowOrderProcess.ApprovedDelegate"></serviceTask>
     <sequenceFlow id="flow5" sourceRef="servicetask2" targetRef="eventgateway2"></sequenceFlow>
-    <intermediateCatchEvent id="messageintermediatecatchevent11" name="MessageCatchEvent">
+    <intermediateCatchEvent id="messageintermediatecatchevent11" name="Cancel">
       <messageEventDefinition messageRef="msgCancel"></messageEventDefinition>
     </intermediateCatchEvent>
     <sequenceFlow id="flow47" sourceRef="eventgateway1" targetRef="messageintermediatecatchevent11"></sequenceFlow>
@@ -51,14 +51,14 @@
       <messageEventDefinition messageRef="msgClose"></messageEventDefinition>
     </intermediateCatchEvent>
     <sequenceFlow id="flow52" sourceRef="eventgateway6" targetRef="messageintermediatecatchevent12"></sequenceFlow>
-    <serviceTask id="servicetask12" name="Closed with Cancellation" activiti:class="com.oriente.cashalo.backend.volt.delegates.BorrowOrderProcess.ClosedDelegate"></serviceTask>
+    <serviceTask id="servicetask12" name="Closed" activiti:class="com.oriente.cashalo.backend.volt.delegates.BorrowOrderProcess.ClosedDelegate"></serviceTask>
     <sequenceFlow id="flow53" sourceRef="messageintermediatecatchevent12" targetRef="servicetask12"></sequenceFlow>
     <endEvent id="endevent3" name="End"></endEvent>
     <sequenceFlow id="flow54" sourceRef="servicetask12" targetRef="endevent3"></sequenceFlow>
     <serviceTask id="servicetask13" name="Submitted" activiti:class="com.oriente.cashalo.backend.volt.delegates.BorrowOrderProcess.SubmittedDelegate"></serviceTask>
-    <sequenceFlow id="flow56" sourceRef="messagestartevent1" targetRef="servicetask13"></sequenceFlow>
+    <sequenceFlow id="flow56" sourceRef="msgStartEvent" targetRef="servicetask13"></sequenceFlow>
     <sequenceFlow id="flow57" sourceRef="servicetask13" targetRef="eventgateway1"></sequenceFlow>
-    <intermediateCatchEvent id="messageintermediatecatchevent14" name="MessageCatchEvent">
+    <intermediateCatchEvent id="messageintermediatecatchevent14" name="Rollback">
       <messageEventDefinition messageRef="msgRollback"></messageEventDefinition>
     </intermediateCatchEvent>
     <sequenceFlow id="flow59" sourceRef="eventgateway2" targetRef="messageintermediatecatchevent14"></sequenceFlow>
@@ -123,10 +123,10 @@
       <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
         <omgdc:Bounds height="35.0" width="35.0" x="1490.0" y="112.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="messagestartevent1" id="BPMNShape_messagestartevent1">
+      <bpmndi:BPMNShape bpmnElement="msgStartEvent" id="BPMNShape_msgStartEvent">
         <omgdc:Bounds height="35.0" width="35.0" x="10.0" y="111.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="messageintermediatecatchevent1" id="BPMNShape_messageintermediatecatchevent1">
+      <bpmndi:BPMNShape bpmnElement="msgEventApprove" id="BPMNShape_msgEventApprove">
         <omgdc:Bounds height="35.0" width="35.0" x="320.0" y="110.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="servicetask2" id="BPMNShape_servicetask2">
@@ -148,7 +148,7 @@
         <omgdc:Bounds height="55.0" width="105.0" x="1015.0" y="361.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="endevent3" id="BPMNShape_endevent3">
-        <omgdc:Bounds height="35.0" width="35.0" x="1165.0" y="371.0"></omgdc:Bounds>
+        <omgdc:Bounds height="35.0" width="35.0" x="1269.0" y="370.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="servicetask13" id="BPMNShape_servicetask13">
         <omgdc:Bounds height="55.0" width="105.0" x="90.0" y="101.0"></omgdc:Bounds>
@@ -238,7 +238,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow54" id="BPMNEdge_flow54">
         <omgdi:waypoint x="1120.0" y="388.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1165.0" y="388.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1269.0" y="387.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow56" id="BPMNEdge_flow56">
         <omgdi:waypoint x="45.0" y="128.0"></omgdi:waypoint>

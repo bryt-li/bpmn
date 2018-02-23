@@ -1,60 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
-  <process id="process_pool1" name="process_pool1" isExecutable="true">
+  <message id="msgNewInvestOrder" name="NewInvestOrder"></message>
+  <message id="msgPayIn" name="PayIn"></message>
+  <message id="msgCancel" name="Cancel"></message>
+  <message id="msgPaidIn" name="PaidIn"></message>
+  <message id="msgLentOut" name="msgLentOut"></message>
+  <message id="msgLendOutFail" name="msgLendOutFail"></message>
+  <message id="msgRepaidIn" name="RepaidIn"></message>
+  <message id="msgSoldOut" name="SoldOut"></message>
+  <process id="InvestOrderProcess" name="Invest Order Process" isExecutable="true">
     <startEvent id="messagestartevent1" name="Message start">
-      <messageEventDefinition></messageEventDefinition>
+      <messageEventDefinition messageRef="msgNewInvestOrder"></messageEventDefinition>
     </startEvent>
-    <serviceTask id="servicetask1" name="Submitted"></serviceTask>
+    <serviceTask id="servicetask1" name="Submitted" activiti:class="foo"></serviceTask>
     <sequenceFlow id="flow1" sourceRef="messagestartevent1" targetRef="servicetask1"></sequenceFlow>
     <sequenceFlow id="flow2" sourceRef="servicetask1" targetRef="eventgateway2"></sequenceFlow>
     <intermediateCatchEvent id="messageintermediatecatchevent1" name="MessageCatchEvent">
-      <messageEventDefinition></messageEventDefinition>
+      <messageEventDefinition messageRef="msgPayIn"></messageEventDefinition>
     </intermediateCatchEvent>
     <sequenceFlow id="flow3" sourceRef="eventgateway2" targetRef="messageintermediatecatchevent1"></sequenceFlow>
-    <serviceTask id="servicetask2" name="Invest Paid-in"></serviceTask>
+    <serviceTask id="servicetask2" name="Invest Paid-in" activiti:class="foo"></serviceTask>
     <sequenceFlow id="flow5" sourceRef="eventgateway2" targetRef="messageintermediatecatchevent2"></sequenceFlow>
     <intermediateCatchEvent id="messageintermediatecatchevent2" name="MessageCatchEvent">
-      <messageEventDefinition></messageEventDefinition>
+      <messageEventDefinition messageRef="msgCancel"></messageEventDefinition>
     </intermediateCatchEvent>
     <eventBasedGateway id="eventgateway1" name="Exclusive Gateway"></eventBasedGateway>
     <eventBasedGateway id="eventgateway2" name="Exclusive Gateway"></eventBasedGateway>
     <intermediateCatchEvent id="messageintermediatecatchevent3" name="MessageCatchEvent">
-      <messageEventDefinition></messageEventDefinition>
+      <messageEventDefinition messageRef="msgLentOut"></messageEventDefinition>
     </intermediateCatchEvent>
     <sequenceFlow id="flow7" sourceRef="eventgateway1" targetRef="messageintermediatecatchevent3"></sequenceFlow>
-    <serviceTask id="servicetask3" name="Invest Succeeded"></serviceTask>
+    <serviceTask id="servicetask3" name="Invest Succeeded" activiti:class="foo"></serviceTask>
     <sequenceFlow id="flow8" sourceRef="messageintermediatecatchevent3" targetRef="servicetask3"></sequenceFlow>
-    <serviceTask id="servicetask4" name="Repaid"></serviceTask>
+    <serviceTask id="servicetask4" name="Repaid" activiti:class="foo"></serviceTask>
     <sequenceFlow id="flow14" sourceRef="eventgateway2" targetRef="timerintermediatecatchevent1"></sequenceFlow>
     <intermediateCatchEvent id="timerintermediatecatchevent1" name="TimerCatchEvent">
-      <timerEventDefinition></timerEventDefinition>
+      <timerEventDefinition>
+        <timeDuration>1000</timeDuration>
+      </timerEventDefinition>
     </intermediateCatchEvent>
-    <serviceTask id="servicetask5" name="Cancelled"></serviceTask>
+    <serviceTask id="servicetask5" name="Cancelled" activiti:class="foo"></serviceTask>
     <sequenceFlow id="flow15" sourceRef="messageintermediatecatchevent2" targetRef="servicetask5"></sequenceFlow>
-    <serviceTask id="servicetask6" name="Timeout Cancelled"></serviceTask>
-    <sequenceFlow id="flow16" sourceRef="timerintermediatecatchevent1" targetRef="servicetask6"></sequenceFlow>
     <endEvent id="endevent3" name="End"></endEvent>
     <sequenceFlow id="flow17" sourceRef="servicetask5" targetRef="endevent3"></sequenceFlow>
-    <sequenceFlow id="flow18" sourceRef="servicetask6" targetRef="endevent3"></sequenceFlow>
     <sequenceFlow id="flow19" sourceRef="eventgateway1" targetRef="messageintermediatecatchevent5"></sequenceFlow>
     <intermediateCatchEvent id="messageintermediatecatchevent5" name="MessageCatchEvent">
-      <messageEventDefinition></messageEventDefinition>
+      <messageEventDefinition messageRef="msgLendOutFail"></messageEventDefinition>
     </intermediateCatchEvent>
     <sequenceFlow id="flow20" sourceRef="messageintermediatecatchevent5" targetRef="servicetask8"></sequenceFlow>
-    <serviceTask id="servicetask8" name="Failed with Balance in Wallet"></serviceTask>
+    <serviceTask id="servicetask8" name="Failed with Balance in Wallet" activiti:class="foo"></serviceTask>
     <endEvent id="endevent4" name="End"></endEvent>
     <sequenceFlow id="flow23" sourceRef="servicetask8" targetRef="endevent4"></sequenceFlow>
     <intermediateCatchEvent id="messageintermediatecatchevent6" name="MessageCatchEvent">
-      <messageEventDefinition></messageEventDefinition>
+      <messageEventDefinition messageRef="msgRepaidIn"></messageEventDefinition>
     </intermediateCatchEvent>
     <sequenceFlow id="flow29" sourceRef="messageintermediatecatchevent6" targetRef="servicetask4"></sequenceFlow>
     <sequenceFlow id="flow31" sourceRef="exclusivegateway1" targetRef="messageintermediatecatchevent6"></sequenceFlow>
     <sequenceFlow id="flow34" sourceRef="messageintermediatecatchevent7" targetRef="servicetask2"></sequenceFlow>
     <sequenceFlow id="flow35" sourceRef="servicetask2" targetRef="eventgateway1"></sequenceFlow>
-    <serviceTask id="servicetask9" name="Schedule Pay-in TxnOrder Process"></serviceTask>
+    <serviceTask id="servicetask9" name="Schedule Pay-in TxnOrder Process" activiti:class="foo"></serviceTask>
     <sequenceFlow id="flow36" name="txnId" sourceRef="messageintermediatecatchevent1" targetRef="servicetask9"></sequenceFlow>
     <intermediateCatchEvent id="messageintermediatecatchevent7" name="MessageCatchEvent">
-      <messageEventDefinition></messageEventDefinition>
+      <messageEventDefinition messageRef="msgPaidIn"></messageEventDefinition>
     </intermediateCatchEvent>
     <sequenceFlow id="flow37" sourceRef="eventgateway2" targetRef="messageintermediatecatchevent7"></sequenceFlow>
     <sequenceFlow id="flow38" sourceRef="servicetask9" targetRef="eventgateway2"></sequenceFlow>
@@ -63,10 +70,10 @@
     <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow40" sourceRef="servicetask3" targetRef="exclusivegateway1"></sequenceFlow>
     <intermediateCatchEvent id="messageintermediatecatchevent8" name="MessageCatchEvent">
-      <messageEventDefinition></messageEventDefinition>
+      <messageEventDefinition messageRef="msgSoldOut"></messageEventDefinition>
     </intermediateCatchEvent>
     <sequenceFlow id="flow41" sourceRef="exclusivegateway1" targetRef="messageintermediatecatchevent8"></sequenceFlow>
-    <serviceTask id="servicetask10" name="Sold-out Closed"></serviceTask>
+    <serviceTask id="servicetask10" name="Sold-out Closed" activiti:class="foo"></serviceTask>
     <sequenceFlow id="flow42" sourceRef="messageintermediatecatchevent8" targetRef="servicetask10"></sequenceFlow>
     <endEvent id="endevent6" name="End"></endEvent>
     <sequenceFlow id="flow43" sourceRef="servicetask10" targetRef="endevent6"></sequenceFlow>
@@ -74,7 +81,8 @@
     <sequenceFlow id="flow44" sourceRef="servicetask4" targetRef="exclusivegateway2"></sequenceFlow>
     <sequenceFlow id="flow45" sourceRef="exclusivegateway2" targetRef="exclusivegateway1"></sequenceFlow>
     <sequenceFlow id="flow46" sourceRef="exclusivegateway2" targetRef="servicetask11"></sequenceFlow>
-    <serviceTask id="servicetask11" name="Repaid Closed"></serviceTask>
+    <serviceTask id="servicetask11" name="Repaid Closed" activiti:class="foo"></serviceTask>
+    <sequenceFlow id="flow47" sourceRef="timerintermediatecatchevent1" targetRef="servicetask5"></sequenceFlow>
     <textAnnotation id="textannotation1">
       <text>RepayOrder Succeed with Repayments</text>
     </textAnnotation>
@@ -88,8 +96,8 @@
     <association id="association2" sourceRef="textannotation2" targetRef="messageintermediatecatchevent3"></association>
     <association id="association3" sourceRef="textannotation1" targetRef="messageintermediatecatchevent6"></association>
   </process>
-  <bpmndi:BPMNDiagram id="BPMNDiagram_process_pool1">
-    <bpmndi:BPMNPlane bpmnElement="process_pool1" id="BPMNPlane_process_pool1">
+  <bpmndi:BPMNDiagram id="BPMNDiagram_InvestOrderProcess">
+    <bpmndi:BPMNPlane bpmnElement="InvestOrderProcess" id="BPMNPlane_InvestOrderProcess">
       <bpmndi:BPMNShape bpmnElement="messagestartevent1" id="BPMNShape_messagestartevent1">
         <omgdc:Bounds height="35.0" width="35.0" x="26.0" y="256.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
@@ -121,22 +129,19 @@
         <omgdc:Bounds height="55.0" width="127.0" x="1365.0" y="103.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="timerintermediatecatchevent1" id="BPMNShape_timerintermediatecatchevent1">
-        <omgdc:Bounds height="35.0" width="35.0" x="346.0" y="456.0"></omgdc:Bounds>
+        <omgdc:Bounds height="35.0" width="35.0" x="365.0" y="456.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="servicetask5" id="BPMNShape_servicetask5">
-        <omgdc:Bounds height="55.0" width="105.0" x="479.0" y="339.0"></omgdc:Bounds>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="servicetask6" id="BPMNShape_servicetask6">
-        <omgdc:Bounds height="55.0" width="105.0" x="426.0" y="446.0"></omgdc:Bounds>
+        <omgdc:Bounds height="55.0" width="105.0" x="479.0" y="390.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="endevent3" id="BPMNShape_endevent3">
-        <omgdc:Bounds height="35.0" width="35.0" x="626.0" y="430.0"></omgdc:Bounds>
+        <omgdc:Bounds height="35.0" width="35.0" x="680.0" y="400.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="messageintermediatecatchevent5" id="BPMNShape_messageintermediatecatchevent5">
         <omgdc:Bounds height="35.0" width="35.0" x="940.0" y="344.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="servicetask8" id="BPMNShape_servicetask8">
-        <omgdc:Bounds height="55.0" width="147.0" x="1030.0" y="334.0"></omgdc:Bounds>
+        <omgdc:Bounds height="55.0" width="191.0" x="1010.0" y="334.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="endevent4" id="BPMNShape_endevent4">
         <omgdc:Bounds height="35.0" width="35.0" x="1256.0" y="344.0"></omgdc:Bounds>
@@ -206,23 +211,15 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow14" id="BPMNEdge_flow14">
         <omgdi:waypoint x="286.0" y="294.0"></omgdi:waypoint>
-        <omgdi:waypoint x="363.0" y="456.0"></omgdi:waypoint>
+        <omgdi:waypoint x="382.0" y="456.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow15" id="BPMNEdge_flow15">
         <omgdi:waypoint x="400.0" y="364.0"></omgdi:waypoint>
-        <omgdi:waypoint x="479.0" y="366.0"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow16" id="BPMNEdge_flow16">
-        <omgdi:waypoint x="381.0" y="473.0"></omgdi:waypoint>
-        <omgdi:waypoint x="426.0" y="473.0"></omgdi:waypoint>
+        <omgdi:waypoint x="531.0" y="390.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow17" id="BPMNEdge_flow17">
-        <omgdi:waypoint x="531.0" y="394.0"></omgdi:waypoint>
-        <omgdi:waypoint x="643.0" y="430.0"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow18" id="BPMNEdge_flow18">
-        <omgdi:waypoint x="531.0" y="473.0"></omgdi:waypoint>
-        <omgdi:waypoint x="626.0" y="447.0"></omgdi:waypoint>
+        <omgdi:waypoint x="584.0" y="417.0"></omgdi:waypoint>
+        <omgdi:waypoint x="680.0" y="417.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow19" id="BPMNEdge_flow19">
         <omgdi:waypoint x="846.0" y="294.0"></omgdi:waypoint>
@@ -230,10 +227,10 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow20" id="BPMNEdge_flow20">
         <omgdi:waypoint x="975.0" y="361.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1030.0" y="361.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1010.0" y="361.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow23" id="BPMNEdge_flow23">
-        <omgdi:waypoint x="1177.0" y="361.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1201.0" y="361.0"></omgdi:waypoint>
         <omgdi:waypoint x="1256.0" y="361.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow29" id="BPMNEdge_flow29">
@@ -301,6 +298,10 @@
       <bpmndi:BPMNEdge bpmnElement="flow46" id="BPMNEdge_flow46">
         <omgdi:waypoint x="1577.0" y="131.0"></omgdi:waypoint>
         <omgdi:waypoint x="1622.0" y="131.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow47" id="BPMNEdge_flow47">
+        <omgdi:waypoint x="400.0" y="473.0"></omgdi:waypoint>
+        <omgdi:waypoint x="531.0" y="445.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="association1" id="BPMNEdge_association1">
         <omgdi:waypoint x="569.0" y="218.0"></omgdi:waypoint>
