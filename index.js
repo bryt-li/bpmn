@@ -14,7 +14,7 @@ function outputPlantumlImage(req, res, next) {
   {
     const name = req.url.substring(1,req.url.length-4);
     res.setHeader('Content-Type', 'image/png');
-    req.url = `/activiti_image_server/proxy?name=${name}&src=${process.env.APP_SERVER}:${process.env.APP_PORT}/${name}`;
+    req.url = `/activiti_image_server/proxy?name=${name}&src=${process.env.ACTIVITI_BPMN_SERVER}/${name}`;
     proxy.on('error', function(e) {
       console.log(e);
     });
